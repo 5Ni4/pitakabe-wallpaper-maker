@@ -279,19 +279,22 @@ h2 {
   font-variant-numeric: tabular-nums;
 }
 .range-field {
-  margin-bottom: 23px;
+  margin-bottom: 10px;
 }
 .range-field label {
   display: flex;
   justify-content: space-between;
   font-size: 14px;
   color: #565f64;
-  margin: 0 0 17px;
+  margin: 0 0 3px;
 }
 .range-field label span {
   font-size: 13px;
   color: #637369;
   font-variant-numeric: tabular-nums;
+}
+.range-field [data-slot='slider'] > [data-horizontal] {
+  min-height: 44px;
 }
 .range-field [data-slot='slider-track'] {
   height: 4px;
@@ -1087,4 +1090,11 @@ h2 {
   .float-tag {
     display: none;
   }
+}
+
+.dark-wallpaper .app-icons {
+  color: #dce5fa;
+}
+.dark-wallpaper .app-icons > div > span {
+  color: #44546a;
 }

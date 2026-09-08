@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import {
   Crop,
@@ -48,7 +48,9 @@ import {
   renderWallpaper,
   makeSample,
   validateSettings,
+  needsLightGuides,
 } from '@/lib/wallpaper';
+import { encodeCurrentPng } from '@/lib/export';
 
 type Source = {
   image: CanvasImageSource;
@@ -80,9 +82,10 @@ function Range({
   max: number;
   unit?: string;
 }) {
+  const labelId = useId();
   return (
     <div className="range-field">
-      <label>
+      <label id={labelId}>
         {label}
         <span>
           {value}
@@ -90,7 +93,7 @@ function Range({
         </span>
       </label>
       <Slider
-        aria-label={label}
+        aria-labelledby={labelId}
         value={[value]}
         min={min}
         max={max}
@@ -119,10 +122,11 @@ export default function Home() {
     loadSequence = useRef(0),
     sourceUrl = useRef(''),
     exportUrl = useRef(''),
+    savingRef = useRef(false),
     current = useRef({ settings, source });
   current.current = { settings, source };
   const device = deviceFor(settings.deviceId),
-    dark = settings.color === '#252b38';
+    dark = needsLightGuides(settings.color);
   const patch = useCallback(
     (next: Partial<Settings>) => setSettings((s) => ({ ...s, ...next })),
     [],
@@ -248,7 +252,13 @@ export default function Home() {
     return () => window.removeEventListener('paste', paste);
   }, [loadFile, exportOpen, help]);
   async function prepareExport() {
-    if (!source || busy) return;
+    if (!source || busy || savingRef.current) return;
+    savingRef.current = true;
+    const sourceVersion = loadSequence.current;
+    const isCurrent = () =>
+      current.current.settings === settings &&
+      current.current.source === source &&
+      loadSequence.current === sourceVersion;
     setSaving(true);
     setError('');
     try {
@@ -260,17 +270,13 @@ export default function Home() {
         source.height,
         settings,
       );
-      const blob = await new Promise<Blob>((resolve, reject) =>
-        output.toBlob(
-          (b) =>
-            b
-              ? resolve(b)
-              : reject(
-                  new Error('書き出しに失敗しました。もう一度お試しください。'),
-                ),
-          'image/png',
-        ),
-      );
+      const blob = await encodeCurrentPng(output, isCurrent);
+      if (!blob) {
+        setError(
+          '作成中に画像や設定が変わりました。もう一度「壁紙を保存する」を押してください。',
+        );
+        return;
+      }
       const file = new File(
         [blob],
         `pitakabe-iphone-${device.id}-${device.width}x${device.height}.png`,
@@ -280,13 +286,19 @@ export default function Home() {
       if (exportUrl.current) URL.revokeObjectURL(exportUrl.current);
       exportUrl.current = url;
       setExported({ file, url, width: device.width, height: device.height });
-      setShareable(Boolean(navigator.canShare?.({ files: [file] })));
+      // A failed optional share capability check must not block PNG download.
+      let canShare = false;
+      try {
+        canShare = Boolean(navigator.canShare?.({ files: [file] }));
+      } catch {}
+      setShareable(canShare);
       setExportOpen(true);
     } catch (e) {
       setError(
         e instanceof Error ? e.message : '保存用の画像を作成できませんでした。',
       );
     } finally {
+      savingRef.current = false;
       setSaving(false);
     }
   }

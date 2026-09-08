@@ -176,3 +176,13 @@ export function validateSettings(input: unknown): Partial<Settings> {
   }
   return patch as Partial<Settings>;
 }
+
+export function needsLightGuides(color: string): boolean {
+  const channels = [1, 3, 5].map(
+    (i) => parseInt(color.slice(i, i + 2), 16) / 255,
+  );
+  const linear = channels.map((c) =>
+    c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4,
+  );
+  return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2] < 0.28;
+}

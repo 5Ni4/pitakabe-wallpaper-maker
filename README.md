@@ -7,7 +7,8 @@ Client-side screenshot wallpaper maker for recent iPhones. Images remain in brow
 - `npm ci`
 - `npm run dev`
 - `npx tsc --noEmit`
-- `node --test tests/wallpaper.test.mjs`
+- `node --test tests/wallpaper.test.mjs tests/export.test.mjs tests/accessibility-ssr.test.mjs`
+- `QA_CANVAS_MODULE=/absolute/path/to/@napi-rs/canvas node --test tests/png-output.test.mjs` (requires a separately installed compatible native canvas; the app has no dependency on it)
 - `npm run build`
 
 ## Behavior
@@ -23,6 +24,6 @@ Sources and safe-area limitations are in DEVICE_SOURCES.md. Device resolutions a
 
 ## Validation scope
 
-TypeScript, the production build, placement invariants across device sizes and extreme aspect ratios, cropping boundaries, rendering command boundaries, and settings validation are checked. Browser interaction tests and physical iPhone saving have not been performed in this task.
+TypeScript, the production build, placement invariants across device sizes and extreme aspect ratios, cropping boundaries, real PNG encode/decode for 104 outputs, obsolete export handling, custom dark guide contrast, and the six server-rendered slider labels are checked. See QA_REPORT.md for evidence and limits. Browser interaction tests were attempted but blocked by the browser tool policy check; physical iPhone saving remains unverified.
 
 Two optional imperative WebMCP tools (`read_wallpaper_settings`, `configure_wallpaper`) feature-detect `document.modelContext`, reuse editor state and validate input. No supported WebMCP validation context was available; registration and in-browser state transitions remain unverified. Unsupported browsers use the same editor without these tools.
