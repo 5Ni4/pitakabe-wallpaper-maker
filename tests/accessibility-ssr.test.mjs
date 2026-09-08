@@ -63,3 +63,16 @@ test('all six native sliders reference their visible Japanese labels', () => {
   ])
     assert.ok(html.includes(label));
 });
+
+test('device steps and fixed pattern buttons have accessible labels without extra customization fields', () => {
+  const Home = loadTs(resolve(root, 'app/page.tsx')).default;
+  const html = renderToString(React.createElement(Home));
+  assert.ok(html.includes('aria-labelledby="series-label"'));
+  assert.ok(html.includes('aria-labelledby="model-label"'));
+  assert.equal((html.match(/role="combobox"/g) ?? []).length, 2);
+  assert.ok(html.includes('<legend>背景の模様</legend>'));
+  for (const label of ['無地', 'ストライプ', '斜め線', '星', '水玉'])
+    assert.ok(html.includes(`>${label}</button>`));
+  assert.equal((html.match(/type="color"/g) ?? []).length, 1);
+  assert.ok(html.includes('下の余白24%'));
+});

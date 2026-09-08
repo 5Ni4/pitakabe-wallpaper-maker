@@ -268,9 +268,66 @@ h2 {
 }
 .device-select {
   width: 100% !important;
-  height: 43px !important;
+  height: 44px !important;
   padding: 9px 12px !important;
   font-size: 14px !important;
+}
+.device-fields {
+  display: grid;
+  gap: 12px;
+}
+.device-label {
+  display: block;
+  font-size: 14px;
+  color: #565f64;
+  margin-bottom: 6px;
+}
+.device-option {
+  min-height: 44px;
+  padding-left: 12px;
+}
+.version-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #64715d;
+  background: #eef3e7;
+  border-radius: 5px;
+  padding: 4px 7px;
+}
+.pattern-field {
+  border: 0;
+  padding: 0;
+  margin: 22px 0 0;
+  min-width: 0;
+}
+.pattern-field legend {
+  font-size: 14px;
+  color: #565f64;
+  margin-bottom: 10px;
+}
+.pattern-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+.pattern-button {
+  min-height: 44px;
+  border: 1px solid #dbe1dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #565f64;
+  font-size: 14px;
+  padding: 8px 2px;
+}
+.pattern-button:hover {
+  background: #f4f7ef;
+}
+.pattern-button.selected {
+  background: #e7f4d3;
+  border-color: #78915c;
+  color: #344539;
+  box-shadow: inset 0 0 0 1px #78915c;
 }
 .dimension-note {
   font-size: 12px;
@@ -536,10 +593,8 @@ h2 {
 }
 .dock {
   position: absolute;
-  bottom: 5%;
   left: 5%;
   right: 5%;
-  height: 10%;
   background: #ffffff60;
   border: 1px solid #ffffff55;
   border-radius: 20px;
@@ -547,6 +602,30 @@ h2 {
   align-items: center;
   justify-content: space-evenly;
   z-index: 3;
+}
+.home-search {
+  position: absolute;
+  left: 42%;
+  width: 16%;
+  border-radius: 99px;
+  background: #ffffffb0;
+  color: #3b4e68;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 8px;
+  font-weight: 600;
+  z-index: 3;
+  pointer-events: none;
+}
+.home-search svg {
+  width: 8px;
+  height: 8px;
+}
+.dark-wallpaper .home-search {
+  background: #152035bb;
+  color: #dce5fa;
 }
 .dock span {
   background: #fff9;
@@ -761,6 +840,13 @@ h2 {
   justify-content: space-between;
   gap: 5px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.section-heading .text-button {
+  min-height: 44px;
+  font-size: 14px;
+  margin-left: auto;
 }
 .section-heading h2 {
   margin: 0;

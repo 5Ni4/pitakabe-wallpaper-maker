@@ -18,3 +18,8 @@ The 32% top / 18% bottom / 6% side margins are product defaults, not Apple-defin
 Wallpaper setup: https://support.apple.com/ja-jp/guide/iphone/iph3d267104/ios
 Lock-screen customization: https://support.apple.com/en-euro/guide/iphone/iph4d0e6c351/ios
 Home-screen customization: https://support.apple.com/en-ae/guide/iphone/iphd2fc8ce30/ios
+# 次期版のホーム画面ガイド
+
+- Appleは、iOS 16以降のiPhoneでホーム画面下部のページドットの代わりに検索が表示されると説明しています。[ホーム画面のアプリとページの整理](https://support.apple.com/en-gu/108307)（確認日: 2026-09-08）。
+- 検索の上端80%・高さ4%、Dockの上端86%・高さ12%は、ユーザー提供の1179×2556の実機画像から得た概算を参考にしたプレビュー用の目安です。Appleの規定値や全機種・全設定での保証ではありません。画像自体や個人的な本文は保存・転載していません。
+- 初期値と「検索・Dockに合わせる」の下余白を24%とし、画像の下端76%と検索の上端80%の間に余裕を設けています。実機差に合わせた手動調整を維持しています。

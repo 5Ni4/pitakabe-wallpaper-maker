@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 export const metadata: Metadata = {
   icons: { icon: '/favicon.svg' },
-  title: 'ぴた壁 — スクショ壁紙メーカー',
+  title: 'ぴた壁 次期版 — スクショ壁紙メーカー',
   description:
-    '時計やDockを避けて、好きなスクショをiPhoneの壁紙に。機種別サイズ・余白調整・PNG保存。画像は端末内で処理します。',
+    '時計・検索・Dockを避けて、好きなスクショをiPhoneの壁紙に。シリーズ別の機種選択・余白と背景模様・PNG保存。画像は端末内で処理します。',
 };
 export default function RootLayout({
   children,

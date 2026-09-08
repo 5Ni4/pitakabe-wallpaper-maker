@@ -22,6 +22,7 @@ import {
   SlidersHorizontal,
   X,
   ArrowUpRight,
+  Search,
 } from 'lucide-react';
 import {
   Select,
@@ -49,6 +50,13 @@ import {
   makeSample,
   validateSettings,
   needsLightGuides,
+  DEVICE_SERIES,
+  seriesForDevice,
+  devicesForSeries,
+  deviceInSeries,
+  PATTERNS,
+  HOME_GUIDES,
+  autoPlacement,
 } from '@/lib/wallpaper';
 import { encodeCurrentPng } from '@/lib/export';
 
@@ -126,6 +134,7 @@ export default function Home() {
     current = useRef({ settings, source });
   current.current = { settings, source };
   const device = deviceFor(settings.deviceId),
+    series = seriesForDevice(device.id),
     dark = needsLightGuides(settings.color);
   const patch = useCallback(
     (next: Partial<Settings>) => setSettings((s) => ({ ...s, ...next })),
@@ -380,6 +389,7 @@ export default function Home() {
           cropTop: { type: 'number', minimum: 0, maximum: 40 },
           cropBottom: { type: 'number', minimum: 0, maximum: 40 },
           color: { type: 'string', pattern: '^#[0-9a-fA-F]{6}$' },
+          pattern: { type: 'string', enum: PATTERNS.map((p) => p.id) },
         },
         additionalProperties: false,
       },
@@ -403,6 +413,7 @@ export default function Home() {
             <Crop size={22} />
           </span>
           ぴた壁<span className="brand-en">PITAKABE</span>
+          <span className="version-label">次期版</span>
         </a>
         <button className="help-link" onClick={() => setHelp(true)}>
           <CircleHelp size={17} />
@@ -414,7 +425,7 @@ export default function Home() {
           <div>
             <p className="eyebrow">SCREENSHOT → WALLPAPER</p>
             <h1>好きなスクショに、ちょうどいい余白。</h1>
-            <p>時計も、下のバーも。重ならない位置に整えよう。</p>
+            <p>時計も、検索も、Dockも。重ならない位置に整えよう。</p>
           </div>
           <span className="device-badge">
             <Smartphone size={15} />
@@ -490,26 +501,72 @@ export default function Home() {
               <h2>
                 <span className="step">02</span>機種を選ぶ
               </h2>
-              <Select
-                value={settings.deviceId}
-                onValueChange={(v) => {
-                  if (v) patch({ deviceId: String(v) });
-                }}
-              >
-                <SelectTrigger
-                  className="device-select"
-                  aria-label="iPhoneの機種"
-                >
-                  <SelectValue>{device.name}</SelectValue>
-                </SelectTrigger>
-                <SelectContent alignItemWithTrigger={false}>
-                  {DEVICES.map((d) => (
-                    <SelectItem key={d.id} value={d.id}>
-                      {d.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="device-fields">
+                <div>
+                  <label className="device-label" id="series-label">
+                    シリーズ
+                  </label>
+                  <Select
+                    value={series}
+                    onValueChange={(v) => {
+                      if (v)
+                        setSettings((currentSettings) => ({
+                          ...currentSettings,
+                          deviceId: deviceInSeries(
+                            String(v),
+                            currentSettings.deviceId,
+                          ).id,
+                        }));
+                    }}
+                  >
+                    <SelectTrigger
+                      className="device-select"
+                      aria-labelledby="series-label"
+                    >
+                      <SelectValue>
+                        {series === 'Air' ? 'Air' : `${series}シリーズ`}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent alignItemWithTrigger={false}>
+                      {DEVICE_SERIES.map((s) => (
+                        <SelectItem className="device-option" key={s} value={s}>
+                          {s === 'Air' ? 'Air' : `${s}シリーズ`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="device-label" id="model-label">
+                    機種
+                  </label>
+                  <Select
+                    key={series}
+                    value={settings.deviceId}
+                    onValueChange={(v) => {
+                      if (v) patch({ deviceId: String(v) });
+                    }}
+                  >
+                    <SelectTrigger
+                      className="device-select"
+                      aria-labelledby="model-label"
+                    >
+                      <SelectValue>{device.name}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent alignItemWithTrigger={false}>
+                      {devicesForSeries(series).map((d) => (
+                        <SelectItem
+                          className="device-option"
+                          key={d.id}
+                          value={d.id}
+                        >
+                          {d.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
               <p className="dimension-note">
                 {device.width} × {device.height} px<span>原寸で書き出し</span>
               </p>
@@ -521,17 +578,10 @@ export default function Home() {
                 </h2>
                 <button
                   className="text-button"
-                  onClick={() =>
-                    patch({
-                      top: mode === 'home' ? 8 : 32,
-                      bottom: 18,
-                      scale: 100,
-                      position: 0,
-                    })
-                  }
+                  onClick={() => patch(autoPlacement(mode))}
                 >
                   <RotateCcw size={12} />
-                  {mode === 'home' ? 'Dockに合わせる' : 'おまかせ'}
+                  {mode === 'home' ? '検索・Dockに合わせる' : 'おまかせ'}
                 </button>
               </div>
               <Range
@@ -577,6 +627,26 @@ export default function Home() {
                   />
                 </label>
               </div>
+              <fieldset className="pattern-field">
+                <legend>背景の模様</legend>
+                <div className="pattern-options">
+                  {PATTERNS.map((pattern) => (
+                    <button
+                      key={pattern.id}
+                      type="button"
+                      aria-pressed={settings.pattern === pattern.id}
+                      className={
+                        settings.pattern === pattern.id
+                          ? 'pattern-button selected'
+                          : 'pattern-button'
+                      }
+                      onClick={() => patch({ pattern: pattern.id })}
+                    >
+                      {pattern.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
               <details className="advanced">
                 <summary>
                   <SlidersHorizontal size={14} />
@@ -670,7 +740,7 @@ export default function Home() {
                 <label className="guide-toggle">
                   ガイド
                   <Switch
-                    aria-label="時計・Dock・余白ガイドを表示"
+                    aria-label="時計・検索・Dock・余白ガイドを表示"
                     checked={guides}
                     onCheckedChange={setGuides}
                   />
@@ -689,7 +759,7 @@ export default function Home() {
                       <canvas
                         ref={canvasRef}
                         className="wallpaper-canvas"
-                        aria-label={`${device.name}用の壁紙。上の余白${settings.top}%、下の余白${settings.bottom}%。`}
+                        aria-label={`${device.name}用の壁紙。上の余白${settings.top}%、下の余白${settings.bottom}%。背景の模様: ${PATTERNS.find((p) => p.id === settings.pattern)?.label}。`}
                       />
                       {guides && (
                         <>
@@ -736,7 +806,24 @@ export default function Home() {
                                   ),
                                 )}
                               </div>
-                              <div className="dock">
+                              <div
+                                className="home-search"
+                                aria-label="検索ボタンの位置の目安"
+                                style={{
+                                  top: `${HOME_GUIDES.search.top}%`,
+                                  height: `${HOME_GUIDES.search.height}%`,
+                                }}
+                              >
+                                <Search aria-hidden="true" />
+                                検索
+                              </div>
+                              <div
+                                className="dock"
+                                style={{
+                                  top: `${HOME_GUIDES.dock.top}%`,
+                                  height: `${HOME_GUIDES.dock.height}%`,
+                                }}
+                              >
                                 {[Phone, MessageCircle, Compass, Music].map(
                                   (Icon, i) => (
                                     <span key={i}>
@@ -755,7 +842,13 @@ export default function Home() {
                             className="safe-zone bottom-zone"
                             style={{ height: `${settings.bottom}%` }}
                           />
-                          <div className="home-indicator" />
+                          <div
+                            className="home-indicator"
+                            style={{
+                              bottom: `${HOME_GUIDES.indicator.bottom}%`,
+                              height: `${HOME_GUIDES.indicator.height}%`,
+                            }}
+                          />
                         </>
                       )}
                     </div>
@@ -776,7 +869,9 @@ export default function Home() {
                         }}
                       >
                         <span />
-                        {mode === 'lock' ? '下の操作部' : 'Dockのスペース'}
+                        {mode === 'lock'
+                          ? '下の操作部'
+                          : '検索・Dockのスペース'}
                       </div>
                     </>
                   )}
@@ -796,7 +891,7 @@ export default function Home() {
               <p className="preview-disclaimer">
                 {mode === 'lock'
                   ? '時計・ウィジェット・通知の表示は設定で変わります。実機で確認して余白を調整してください。'
-                  : 'Dock・アイコンは表示例です。アプリやウィジェットとの重なりは、ホーム画面の配置によります。'}
+                  : '検索・Dock・下のバーは位置の目安です。iOSや設定で変わるため、実機に合わせて下の余白を調整してください。'}
               </p>
             </div>
           </section>
@@ -823,9 +918,9 @@ export default function Home() {
               </p>
             </li>
             <li>
-              <strong>時計やDockを見ながら調整</strong>
+              <strong>時計・検索・Dockを見ながら調整</strong>
               <p>
-                画面を切り替えて確認。「おまかせ」で時計の余白を、「Dockに合わせる」でホーム用の余白を設定できます。
+                画面を切り替えて確認。「おまかせ」で時計の余白を、「検索・Dockに合わせる」でホーム用の余白を設定できます。背景の模様は5種類から選べます。
               </p>
             </li>
             <li>
