@@ -633,6 +633,14 @@ h2 {
   font-weight: 600;
   white-space: nowrap;
 }
+.footer-credit a {
+  text-decoration: underline;
+  text-decoration-color: #a8bd8c;
+  text-underline-offset: 3px;
+}
+.footer-credit a:hover {
+  color: #344539;
+}
 @media (min-width: 1500px) {
   main {
     padding-top: 44px;
