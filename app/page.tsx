@@ -804,6 +804,7 @@ export default function Home() {
         <footer className="page-footer">
           <p>写真に保存 → iPhoneの「設定」→「壁紙」から設定</p>
           <span>時計やガイドは保存されません。</span>
+          <span className="footer-credit">制作：R-524</span>
         </footer>
       </main>
       <Dialog open={help} onOpenChange={setHelp}>

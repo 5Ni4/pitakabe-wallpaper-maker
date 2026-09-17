@@ -628,6 +628,11 @@ h2 {
 .page-footer p {
   margin: 0;
 }
+.footer-credit {
+  color: #536d40;
+  font-weight: 600;
+  white-space: nowrap;
+}
 @media (min-width: 1500px) {
   main {
     padding-top: 44px;
