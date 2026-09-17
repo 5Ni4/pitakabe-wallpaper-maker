@@ -804,8 +804,8 @@ export default function Home() {
         <footer className="page-footer">
           <p>写真に保存 → iPhoneの「設定」→「壁紙」から設定</p>
           <span>時計やガイドは保存されません。</span>
-          <span className="footer-credit">
-            制作：{' '}
+          <span className="footer-contact">
+            改善要望、ご感想は{' '}
             <a
               href="https://x.com/R5ni4"
               target="_blank"
