@@ -104,7 +104,7 @@ export const DEFAULTS: Settings = {
   position: 0,
   cropTop: 0,
   cropBottom: 0,
-  color: '#d6c568',
+  color: '#e4eaf5',
   pattern: 'solid',
 };
 export function deviceFor(id: string) {
@@ -235,22 +235,22 @@ export function makeSample() {
   canvas.height = 950;
   const c = canvas.getContext('2d');
   if (!c) throw new Error('プレビューを表示できません。');
-  c.fillStyle = '#fffdf4';
+  c.fillStyle = '#ffffff';
   c.fillRect(0, 0, 780, 950);
-  c.fillStyle = '#5a7075';
+  c.fillStyle = '#728071';
   c.font = '24px Arial';
   c.fillText('NOTE TO SELF', 75, 106);
-  c.fillStyle = '#29484e';
+  c.fillStyle = '#26302c';
   c.font = '600 68px sans-serif';
   c.fillText('今日も、', 70, 295);
   c.fillText('自分のペースで。', 70, 405);
-  c.fillStyle = '#d6c568';
+  c.fillStyle = '#d0e5ab';
   c.fillRect(75, 485, 105, 9);
-  c.fillStyle = '#5a7075';
+  c.fillStyle = '#6a786e';
   c.font = '35px sans-serif';
   c.fillText('小さな一歩も、', 75, 610);
   c.fillText('ちゃんと前進。', 75, 675);
-  c.fillStyle = '#8b796a';
+  c.fillStyle = '#8b978d';
   c.font = '20px Arial';
   c.fillText('SAMPLE SCREENSHOT', 75, 855);
   return canvas;
