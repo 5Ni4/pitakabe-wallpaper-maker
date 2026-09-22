@@ -69,11 +69,11 @@ type Source = {
 };
 type Exported = { file: File; url: string; width: number; height: number };
 const colors = [
-  ['#e4eaf5', 'ブルー'],
-  ['#f7f7f7', 'ホワイト'],
-  ['#e0e9dd', 'グリーン'],
-  ['#e9ddef', 'ライラック'],
-  ['#252b38', 'チャコール'],
+  ['#d6c568', '524イエロー'],
+  ['#fffdf4', 'ミルク'],
+  ['#dcebec', 'ソーダ'],
+  ['#e5d1c4', 'オレンジ'],
+  ['#365d64', 'ディープブルー'],
 ];
 function Range({
   label,
@@ -413,7 +413,7 @@ export default function Home() {
             <Crop size={22} />
           </span>
           ぴた壁<span className="brand-en">PITAKABE</span>
-          <span className="version-label">次期版</span>
+          <span className="version-label">524版</span>
         </a>
         <button className="help-link" onClick={() => setHelp(true)}>
           <CircleHelp size={17} />
@@ -610,7 +610,7 @@ export default function Home() {
                     }
                     style={{
                       background: c,
-                      color: c === '#252b38' ? '#fff' : undefined,
+                      color: needsLightGuides(c) ? '#fff' : undefined,
                     }}
                     onClick={() => patch({ color: c })}
                   >
