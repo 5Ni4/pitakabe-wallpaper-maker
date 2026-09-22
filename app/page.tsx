@@ -413,7 +413,6 @@ export default function Home() {
             <Crop size={22} />
           </span>
           ぴた壁<span className="brand-en">PITAKABE</span>
-          <span className="version-label">次期版</span>
         </a>
         <button className="help-link" onClick={() => setHelp(true)}>
           <CircleHelp size={17} />
