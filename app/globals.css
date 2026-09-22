@@ -716,6 +716,19 @@ h2 {
 .page-footer p {
   margin: 0;
 }
+.footer-contact {
+  color: #536d40;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.footer-contact a {
+  text-decoration: underline;
+  text-decoration-color: #a8bd8c;
+  text-underline-offset: 3px;
+}
+.footer-contact a:hover {
+  color: #344539;
+}
 @media (min-width: 1500px) {
   main {
     padding-top: 44px;
